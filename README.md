@@ -36,5 +36,5 @@ Apache Maven 3.5.2
 
 mvn eclipse:clean eclipse:eclipse -DdownloadSources=true
 mvn spring-boot:run
-mvn clean package docker:build
+mvn clean package
 ```
