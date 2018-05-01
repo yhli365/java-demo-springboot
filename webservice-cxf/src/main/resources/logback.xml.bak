@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration>
+	<!-- log.level: [TRACE|DEBUG|INFO|WARN|ERROR|FATAL|OFF] -->
+	<springProperty name="log.level" source="log.level"
+		defaultValue="INFO" />
+	<springProperty name="log.dir" source="log.dir"
+		defaultValue="logs" />
+	<springProperty name="log.name" source="log.name"
+		defaultValue="demo" />
+	<!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+	<springProperty name="log.pattern" source="log.pattern"
+		defaultValue="%d{yy/MM/dd HH:mm:ss.SSS} %-5p [%t] %c{3}\(%M:%L\) - %m%n" />
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+			<charset>UTF-8</charset> <!-- 此处设置字符集 -->
+		</encoder>
+	</appender>
+
+	<appender name="rollfile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender -->
+		<File>${log.dir}/${log.name}.log</File>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+			<charset>UTF-8</charset> <!-- 此处设置字符集 -->
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${log.dir}/demo.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 50MB -->
+				<maxFileSize>20MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>200</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<root level="${log.level}">
+		<appender-ref ref="stdout" />
+		<!--<appender-ref ref="rollfile" /> -->
+	</root>
+	<logger name="demo.*" level="DEBUG" />
+</configuration>
